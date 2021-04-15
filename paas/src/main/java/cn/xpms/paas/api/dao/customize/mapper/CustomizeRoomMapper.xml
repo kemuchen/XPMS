@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xpms.paas.api.dao.customize.repository.CustomizeRoomMapper">
+
+    <resultMap id="BaseResultMap" type="cn.xpms.paas.api.dao.generator.entity.PaasRoomInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="project_id" jdbcType="VARCHAR" property="projectId"/>
+        <result column="room_id" jdbcType="VARCHAR" property="roomId"/>
+        <result column="room_name" jdbcType="VARCHAR" property="roomName"/>
+        <result column="room_no" jdbcType="VARCHAR" property="roomNo"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="space_id" jdbcType="VARCHAR" property="spaceId"/>
+        <result column="construction_status" jdbcType="VARCHAR" property="constructionStatus"/>
+        <result column="valid" jdbcType="INTEGER" property="valid"/>
+        <result column="create_user" jdbcType="INTEGER" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_user" jdbcType="INTEGER" property="modifyUser"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+
+    <select id="getProjectDetail" resultType="map" parameterType="cn.xpms.paas.api.dao.generator.entity.PaasRoomInfo">
+        select * from v_room_status
+        <where>
+            <if test="projectId != null and projectId !=''">
+                and project_id=#{projectId}
+            </if>
+            <if test="roomId != null and roomId !=''">
+                and room_id=#{roomId}
+            </if>
+            <if test="spaceId != null and spaceId !=''">
+                and space_id=#{spaceId}
+            </if>
+            <if test="roomNo != null and roomNo !=''">
+                and room_no=#{roomNo}
+            </if>
+            <if test="constructionStatus != null and constructionStatus !=''">
+                and construction_status=#{constructionStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAvailableTemplateRooms" resultMap="BaseResultMap">
+        SELECT * from paas_room_info
+        WHERE valid=1 and project_id = #{projectId}
+        and room_id not IN(SELECT roomId from v_paas_template_scene where templateId = #{templateId})
+    </select>
+
+    <select id="getTemplateRooms" resultType="map">
+        select * from v_paas_template_scene
+            where templateId = #{templateId} and projectId = #{projectId}
+    </select>
+
+    <select id="getSceneTemplates" parameterType="cn.xpms.paas.api.dao.generator.entity.PaasSceneTemplate"
+            resultType="map">
+        SELECT a.id, a.project_id projectId, a.template_name templateName, a.scene_name sceneName, a.valid, a.create_user
+        createUser, a.create_time createTime, a.modify_user modifyUser, a.modify_time modifyTime, a.memo,
+        GROUP_CONCAT( DISTINCT(d.room_no) ) roomNos
+        FROM paas_scene_template a
+        LEFT JOIN paas_scene_template_scene b ON a.id = b.template_id AND b.valid = 1
+        LEFT JOIN paas_scene_info c ON b.scene_id = c.scene_id AND c.valid = 1
+        LEFT JOIN paas_room_info d ON c.room_id = d.room_id
+        WHERE a.valid = 1
+        <if test="projectId != null and projectId !=''">
+            and a.project_id=#{projectId}
+        </if>
+        <if test="templateName != null and templateName !=''">
+            and a.template_name=#{templateName}
+        </if>
+        <if test="sceneName != null and sceneName !=''">
+            and a.scene_name=#{sceneName}
+        </if>
+        GROUP BY a.id
+    </select>
+
+</mapper>

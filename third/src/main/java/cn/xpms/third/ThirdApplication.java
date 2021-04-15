@@ -1,0 +1,34 @@
+package cn.xpms.third;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+/**
+ * @ClassName ThirdApplication
+ * @Desc
+ * @Author 柯雷
+ * @Date 2020/11/12 11:25
+ * @Version 1.0
+ */
+@SpringBootApplication(scanBasePackages = "cn.xpms.**")
+@MapperScan({"cn.xpms.**.dao"})
+@EnableCaching
+@EnableTransactionManagement
+public class ThirdApplication extends SpringBootServletInitializer {
+
+    /**
+     * @Description: 入口main方法
+     * @Params: [args]
+     * @return: void
+     * @Author: 柯雷
+     * @Date: 2019/12/25 9:35
+     */
+    public static void main(String[] args) {
+        // 启动时设置spring上下文
+        SpringApplication.run(ThirdApplication.class, args);
+    }
+}

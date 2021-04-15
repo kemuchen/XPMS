@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xpms.paas.api.dao.customize.repository.CustomizeVoiceMapper">
+
+    <select id="getVoiceRoomRelations" resultType="map">
+        select * from v_paas_voice_room_relation
+        <where>
+            <if test="projectId != null and projectId !=''">
+                and projectId=#{projectId}
+            </if>
+            <if test="roomId != null and roomId !=''">
+                and roomId=#{roomId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getVoiceThirdPartyAuth" resultType="map">
+        select * from v_paas_voice_third_party_auth where valid=1
+        <if test="projectId != null and projectId !=''">
+            and projectId=#{projectId}
+        </if>
+        <if test="brandId != null and brandId !=''">
+            and brandId=#{brandId}
+        </if>
+    </select>
+
+</mapper>

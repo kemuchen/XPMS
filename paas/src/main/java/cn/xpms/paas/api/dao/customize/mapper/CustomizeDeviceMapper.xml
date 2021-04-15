@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xpms.paas.api.dao.customize.repository.CustomizeDeviceMapper">
+
+    <sql id="Base_Column_List">
+        id, device_id deviceId, product_id productId, product_name productName, category, category_code categoryCode,
+        `name`, active_time activeTime, gmt_time gmtTime, `online`, software_version softwareVersion,
+        product_module productModule, `position`, project_id projectId, room_id roomId, room_name roomName, room_no roomNo,
+        telephone, space_id spaceId, construction_status constructionStatus, room_desc roomDesc, scene, `condition`, `action`,
+        `valid`, create_user createUser, create_time createTime, modify_user modifyUser, modify_time modifyTime, memo
+    </sql>
+
+    <select id="getDeviceInfos" parameterType="cn.xpms.paas.api.bean.dto.device.PaasDeviceQuery" resultType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from v_paas_device_info
+        <where>
+            valid = 1
+            <if test="projectId != null and projectId != ''">
+                and project_id = #{projectId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="roomNo != null and roomNo != ''">
+                and room_no like CONCAT("%",#{roomNo},"%")
+            </if>
+            <if test="categoryCode != null and categoryCode != ''">
+                and category_code = #{categoryCode}
+            </if>
+            <if test="online != null and online != ''">
+                and online = #{online}
+            </if>
+            <if test="scene != null and scene != ''">
+                and scene = #{scene}
+            </if>
+            <if test="condition != null and condition != ''">
+                and `condition` = #{condition}
+            </if>
+            <if test="action != null and action != ''">
+                and `action` = #{action}
+            </if>
+        </where>
+    </select>
+</mapper>

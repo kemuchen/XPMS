@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 一、配置数据库连接信息 -->
+    <!--targetRuntime=“MyBatis3“可以生成带条件的增删改查 -->
+    <!--targetRuntime=“MyBatis3Simple“可以生成基本的增删改查-->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!-- 自动识别数据库关键字，默认false -->
+        <property name="autoDelimitKeywords" value="true" />
+        <!--可以使用``包括字段名，避免字段名与sql保留字冲突报错 -->
+        <property name="beginningDelimiter" value="`" />
+        <property name="endingDelimiter" value="`" />
+        <!-- 生成limit分页属性	【扩展插件】-->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+        <!--生成的实体类实现序列化接口	【扩展插件】-->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <!--生成的实体类重写toString方法-->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!-- 生成的实体类重写hashCode和equals方法 -->
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+
+        <!-- 使用自定义的插件:entity的lombok注解 -->
+        <plugin type="cn.xpms.system.plugin.LombokPlugin"/>
+
+        <!-- 格式化代码 -->
+        <commentGenerator>
+            <!-- 生成的Java文件的编码 -->
+            <property name="javaFileEncoding" value="UTF-8"/>
+<!--            <property name="suppressAllComments" value="false" />-->
+            <!-- 格式化java代码 -->
+            <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+            <!-- 格式化XML代码 -->
+            <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        </commentGenerator>
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://www.xpms.cn:3306/xpms_dev?serverTimezone=GMT"
+                        userId="root"
+                        password="http://www.xpms.cn127.0.0.l@">
+        </jdbcConnection>
+
+        <!-- 不强制转换decimal -->
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 二、指定javabean生成的位置 -->
+        <javaModelGenerator targetPackage="cn.xpms.member.coupon.dao.generator.entity"
+                            targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- 三、指定sql映射文件生成的位置 -->
+        <sqlMapGenerator targetPackage="cn.xpms.member.coupon.dao.generator.mapper" targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- 四、指定dao接口生成的位置 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="cn.xpms.member.coupon.dao.generator.repository"
+                             targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!-- 五、table指定每个表的生成策略 -->
+        <!--配置要逆向解析的数据表，tableName对应表名，domainObjectName对应javaBean名-->
+        <table tableName="member_dict" domainObjectName="MemberDict">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+<!--        <table tableName="member_coupon_info" domainObjectName="MemberCouponInfo">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+<!--        <table tableName="member_coupon_get_record" domainObjectName="MemberCouponGetRecord">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+<!--        <table tableName="member_coupon_event_record" domainObjectName="MemberCouponEventRecord">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+    </context>
+</generatorConfiguration>
